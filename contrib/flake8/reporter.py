@@ -10,7 +10,7 @@ try:
 except ImportError:     # Python 2.5
     multiprocessing = None
 
-import pep8
+import pycodestyle as pep8
 
 __all__ = ['multiprocessing', 'BaseQReport', 'QueueReport']
 
@@ -59,8 +59,8 @@ class BaseQReport(pep8.BaseReport):
     def _process_main(self):
         if not self._loaded:
             # Windows needs to parse again the configuration
-            from flake8.main import get_style_guide, DEFAULT_CONFIG
-            get_style_guide(parse_argv=True, config_file=DEFAULT_CONFIG)
+            from flake8.main import get_style_guide
+            get_style_guide(parse_argv=True)
         for filename in iter(self.task_queue.get, 'DONE'):
             self.input_file(filename)
 

@@ -8,7 +8,7 @@ except ImportError:
     import mock  # < PY33
 
 from flake8 import engine, util, __version__, reporter
-import pep8
+import pycodestyle as pep8
 
 
 class TestEngine(unittest.TestCase):
@@ -48,7 +48,7 @@ class TestEngine(unittest.TestCase):
             StyleGuide.assert_called_once_with(**{'parser': m, 'foo': 'bar'})
 
     def test_register_extensions(self):
-        with mock.patch('pep8.register_check') as register_check:
+        with mock.patch('pycodestyle.register_check') as register_check:
             registered_exts = engine._register_extensions()
             self.assertTrue(isinstance(registered_exts[0], util.OrderedSet))
             self.assertTrue(len(registered_exts[0]) > 0)
@@ -62,7 +62,7 @@ class TestEngine(unittest.TestCase):
 
         parser.ignored_extensions = ['I123', 'I345', 'I678', 'I910']
 
-        options.enabled_extensions = 'I345,\nI678,I910'
+        options.enable_extensions = 'I345,\nI678,I910'
         options.ignore = ('E121', 'E123')
 
         engine._disable_extensions(parser, options)
@@ -72,7 +72,7 @@ class TestEngine(unittest.TestCase):
         # setup
         re = self.start_patch('flake8.engine._register_extensions')
         gpv = self.start_patch('flake8.engine.get_python_version')
-        pgp = self.start_patch('pep8.get_parser')
+        pgp = self.start_patch('pycodestyle.get_parser')
         m = mock.Mock()
         re.return_value = ([('pyflakes', '0.7'), ('mccabe', '0.2')], [], [],
                            [])

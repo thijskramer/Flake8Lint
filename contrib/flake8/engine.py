@@ -6,7 +6,7 @@ import re
 import sys
 import warnings
 
-import pep8
+import pycodestyle as pep8
 
 from flake8 import __version__
 from flake8 import callbacks
@@ -18,7 +18,7 @@ _flake8_noqa = re.compile(r'\s*# flake8[:=]\s*noqa', re.I).search
 
 EXTRA_EXCLUDE = ['.tox', '.eggs', '*.egg']
 
-pep8.PROJECT_CONFIG += ('.flake8',)
+pep8.PROJECT_CONFIG = ('.flake8',) + pep8.PROJECT_CONFIG
 
 
 def _load_entry_point(entry_point, verify_requirements):
@@ -44,7 +44,7 @@ def _load_entry_point(entry_point, verify_requirements):
 def _register_extensions():
     """Register all the extensions."""
     extensions = util.OrderedSet()
-    extensions.add(('pep8', pep8.__version__))
+    extensions.add(('pycodestyle', pep8.__version__))
     parser_hooks = []
     options_hooks = []
     ignored_hooks = []
@@ -103,11 +103,11 @@ def get_parser():
                       type='string', nargs=1, action='callback',
                       callback=callbacks.redirect_stdout)
     parser.add_option('--enable-extensions', default='',
-                      dest='enabled_extensions',
+                      dest='enable_extensions',
                       help='Enable plugins and extensions that are disabled '
                            'by default',
                       type='string')
-    parser.config_options.extend(['output_file', 'enable_extensions'])
+    parser.config_options.extend(['output-file', 'enable-extensions'])
     parser.ignored_extensions = ignored
     return parser, options_hooks
 
@@ -216,7 +216,7 @@ def _parse_multi_options(options, split_token=','):
 
 def _disable_extensions(parser, options):
     ignored_extensions = set(getattr(parser, 'ignored_extensions', []))
-    enabled = set(_parse_multi_options(options.enabled_extensions))
+    enabled = set(_parse_multi_options(options.enable_extensions))
 
     # Remove any of the selected extensions from the extensions ignored by
     # default.
